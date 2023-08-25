@@ -1,7 +1,6 @@
 import market.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -88,11 +87,11 @@ public class YandexMarketTest {
                 firstElementName, smartphonesPage.getNextButton(), SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
 
         // Вывести цифровое значение оценки элемента
-        SmartphonePage smartphonePage = new SmartphonePage(driver, wait);
+        ItemPage itemPage = new ItemPage(driver, wait);
         if (savedElement != null) {
             smartphonesPage.clickButton(savedElement.findElement(By.xpath(SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH)),
                     SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
-            System.out.println("Оценка смартфона " + ": " + smartphonePage.getRating().getText());
+            System.out.println("Оценка смартфона " + ": " + itemPage.getRating().getText());
         } else {
             System.out.println("Искомый смартфон не обнаружен.");
         }

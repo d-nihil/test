@@ -29,7 +29,7 @@ public class YandexMarketTest {
         // Здесь вторым аргументом нужно передать расположение chromedriver.exe
         System.setProperty("webdriver.chrome.driver", "D:\\soft\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(20000));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(10000));
         HomePage homePage = new HomePage(driver, wait, "https://market.yandex.ru/");
 
         // Открыть браузер и развернуть на весь экран.

@@ -246,8 +246,8 @@ public abstract class Page {
             } catch (InterruptedException ex) {
             }
 
-            if (js.executeScript("return document.readyState").toString().equals("complete"));
-            break;
+            if (js.executeScript("return document.readyState").toString().equals("complete"))
+                break;
         }
     }
 

@@ -48,11 +48,11 @@ public abstract class Page {
         scrollIntoView(element);
         try {
             hoverOver(element, xpath);
-            action.pause(2000).click(element).perform();
+            action.pause(1000).click(element).perform();
         } catch (StaleElementReferenceException | NoSuchElementException ex) {
             PageFactory.initElements(driver, this);
             hoverOver(element, xpath);
-            action.pause(2000).click(element).perform();
+            action.pause(1000).click(element).perform();
         }
     }
 
@@ -61,10 +61,10 @@ public abstract class Page {
         waitForPresenceOfElement(By.xpath(xpath));
         scrollIntoView(element);
         try {
-            action.pause(2000).moveToElement(element).perform();
+            action.pause(1000).moveToElement(element).perform();
         } catch (StaleElementReferenceException | NoSuchElementException ex) {
             PageFactory.initElements(driver, this);
-            action.pause(2000).moveToElement(element).perform();
+            action.pause(1000).moveToElement(element).perform();
         }
     }
 
@@ -73,10 +73,10 @@ public abstract class Page {
         waitForPresenceOfElement(By.xpath(xpath));
         scrollIntoView(element);
         try {
-            action.moveToElement(element).pause(2000).sendKeys(element, inputString).pause(1000).perform();
+            action.moveToElement(element).pause(1000).sendKeys(element, inputString).perform();
         } catch (StaleElementReferenceException | NoSuchElementException ex) {
             PageFactory.initElements(driver, this);
-            action.moveToElement(element).pause(2000).sendKeys(element, inputString).pause(1000).perform();
+            action.moveToElement(element).pause(1000).sendKeys(element, inputString).perform();
         }
     }
 

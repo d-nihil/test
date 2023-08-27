@@ -256,4 +256,10 @@ public abstract class Page {
         waitUntilPageIsLoaded();
         js.executeScript("arguments[0].scrollIntoView(false);", element);
     }
+
+    // Этот метод позволяет переключаться между вкладками. Нумерация вкладок начинается с 0.
+    public void switchTabs(int tabNumber) {
+        List<String> tabs = new ArrayList<String>(driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(tabNumber));
+    }
 }

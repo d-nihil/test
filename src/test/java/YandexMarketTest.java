@@ -77,7 +77,6 @@ public class YandexMarketTest {
         WebElement firstElement = smartphonesPage.getNthElement(smartphonesPage.getSmartphonesBox(),
                 SmartphonesPage.SMARTPHONES_BOX_XPATH, SmartphonesPage.SMARTPHONES_ADDITIONAL_XPATH, start);
         String firstElementName = smartphonesPage.getTextFromSubelement(firstElement, SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
-        System.out.println(firstElementName);
 
         // Изменить сортировку на другую (по цене)
         smartphonesPage.clickButton(smartphonesPage.getSortByPrice(), SmartphonesPage.SORT_BY_PRICE_XPATH);
@@ -90,6 +89,7 @@ public class YandexMarketTest {
             smartphonesPage.clickButton(foundElement.findElement(By.xpath(SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH)),
                     SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
             ItemPage itemPage = new ItemPage(driver, wait);
+            smartphonesPage.switchTabs(1);
             System.out.println("Оценка смартфона " + foundElementName + ": "
                     + itemPage.getTextFromSubelement(itemPage.getRating(), ItemPage.RATING_VALUE_ADDITIONAL_XPATH));
         } else {

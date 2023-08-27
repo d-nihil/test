@@ -3,10 +3,10 @@ package market;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.NoSuchElementException;
 
 public class ItemPage extends Page {
-    public static final String RATING_XPATH = "(//div[@data-baobab-name='rating']/span[1])[2]";
+    public static final String RATING_XPATH = "//div[@data-zone-name='productCardTitle']//div[@data-baobab-name='productActions']//div[@data-baobab-name='rating']";
+    public static final String RATING_VALUE_ADDITIONAL_XPATH = "./span[1]";
 
     @FindBy(xpath = RATING_XPATH)
     private WebElement rating;

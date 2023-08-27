@@ -16,7 +16,7 @@ import java.time.Duration;
 8. Задать диагональ экрана от 3 дюймов
 9. Выбрать не менее 5 любых производителей, среди популярных.
 10. Нажать кнопку "Показать"
-11. Проверить, что после пролистывания страницы в самый низ на ней 10 элементов.
+11. Проверить, что после пролистывания страницы в самый низ на ней 48 элементов.
 12. Запомнить первый элемент в списке.
 13. Изменить сортировку на другую (по цене)
 14. Найти запомненный объект и нажать по его имени
@@ -56,7 +56,7 @@ public class YandexMarketTest {
         allFiltersForSmartPhonesPage.clickButton(allFiltersForSmartPhonesPage.getShowButton(),
                 AllFiltersForSmartPhonesPage.SHOW_BUTTON_XPATH);
 
-        // Проверить, что на странице 10 элементов.
+        // Проверить, что на странице 48 элементов.
         // Первым подэлементом может быть блок "Популярные предложения". Если он присутствует, делаем декремент количества смартфонов.
         int numberOfSmartphones = smartphonesPage.countElements(smartphonesPage.getSmartphonesBox(),
                 SmartphonesPage.SMARTPHONES_BOX_XPATH, SmartphonesPage.SMARTPHONES_ADDITIONAL_XPATH);
@@ -64,7 +64,7 @@ public class YandexMarketTest {
                 SmartphonesPage.PREMIUM_OFFERS_ADDITIONAL_XPATH)) {
             numberOfSmartphones--;
         }
-        System.out.println("На странице 10 элементов: " + (numberOfSmartphones == 10));
+        System.out.println("На странице 48 элементов: " + (numberOfSmartphones == 48));
         System.out.println("На странице " + (numberOfSmartphones) + " элементов");
 
         // Запомнить первый элемент в списке.
@@ -76,22 +76,22 @@ public class YandexMarketTest {
         }
         WebElement firstElement = smartphonesPage.getNthElement(smartphonesPage.getSmartphonesBox(),
                 SmartphonesPage.SMARTPHONES_BOX_XPATH, SmartphonesPage.SMARTPHONES_ADDITIONAL_XPATH, start);
-        String firstElementName = smartphonesPage.getSmartphoneName(firstElement);
+        String firstElementName = smartphonesPage.getTextFromSubelement(firstElement, SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
         System.out.println(firstElementName);
 
         // Изменить сортировку на другую (по цене)
         smartphonesPage.clickButton(smartphonesPage.getSortByPrice(), SmartphonesPage.SORT_BY_PRICE_XPATH);
 
-        //Найти запомненный объект и нажать по его имени
-        WebElement savedElement = smartphonesPage.traverseSearchResults(smartphonesPage.getSmartphonesBox(), SmartphonesPage.SMARTPHONES_BOX_XPATH, SmartphonesPage.SMARTPHONES_ADDITIONAL_XPATH,
+        //Найти запомненный объект, нажать по его имени, вывести цифровое значение оценки элемента
+        WebElement foundElement = smartphonesPage.traverseSearchResults(smartphonesPage.getSmartphonesBox(), SmartphonesPage.SMARTPHONES_BOX_XPATH, SmartphonesPage.SMARTPHONES_ADDITIONAL_XPATH,
                 firstElementName, smartphonesPage.getNextButton(), SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
-
-        // Вывести цифровое значение оценки элемента
-        ItemPage itemPage = new ItemPage(driver, wait);
-        if (savedElement != null) {
-            smartphonesPage.clickButton(savedElement.findElement(By.xpath(SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH)),
+        if (foundElement != null) {
+            String foundElementName = smartphonesPage.getTextFromSubelement(foundElement, SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
+            smartphonesPage.clickButton(foundElement.findElement(By.xpath(SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH)),
                     SmartphonesPage.SMARTPHONE_NAME_ADDITIONAL_XPATH);
-            System.out.println("Оценка смартфона " + ": " + itemPage.getRating().getText());
+            ItemPage itemPage = new ItemPage(driver, wait);
+            System.out.println("Оценка смартфона " + foundElementName + ": "
+                    + itemPage.getTextFromSubelement(itemPage.getRating(), ItemPage.RATING_VALUE_ADDITIONAL_XPATH));
         } else {
             System.out.println("Искомый смартфон не обнаружен.");
         }

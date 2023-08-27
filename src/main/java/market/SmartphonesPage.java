@@ -47,10 +47,6 @@ public class SmartphonesPage extends Page {
         return sortByPrice;
     }
 
-    public String getSmartphoneName(WebElement element) {
-        return element.findElement(By.xpath(SMARTPHONE_NAME_ADDITIONAL_XPATH)).getText();
-    }
-
     public WebElement getNextButton() {
         return nextButton;
     }

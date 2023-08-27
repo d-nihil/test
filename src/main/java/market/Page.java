@@ -90,7 +90,7 @@ public abstract class Page {
 
         while (numberOfCheckedElements < number) {
             try {
-                action.pause(2000).click(childElements.get(start)).perform();
+                action.pause(500).click(childElements.get(start)).perform();
             } catch (StaleElementReferenceException | NoSuchElementException ex) {
                 PageFactory.initElements(driver, this);
                 childElements = parentElement.findElements(By.xpath(additionalXPath));
@@ -106,8 +106,8 @@ public abstract class Page {
 
     // Этот метод возвращает количество элементов на странице в родительском элементе
     public int countElements(WebElement parentElement, String parentElementXPath, String additionalXPath) {
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
         waitForPresenceOfElement(By.xpath(parentElementXPath));
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
         int result;
         List<WebElement> elements;
         try {
@@ -150,21 +150,40 @@ public abstract class Page {
         }
     }
 
+    // Этот метод возвращает текст из подэлемента родительского элемента
+    public String getTextFromSubelement(WebElement parentElement, String additionalXPath) {
+        waitUntilPageIsLoaded();
+        try {
+            return parentElement.findElement(By.xpath(additionalXPath)).getText();
+        } catch (StaleElementReferenceException | NoSuchElementException ex) {
+            PageFactory.initElements(driver, this);
+            return parentElement.findElement(By.xpath(additionalXPath)).getText();
+        }
+    }
+
     // Этот метод позволяет постранично пройтись по всем результатам выдачи в поисках элемента по его имени.
     // Возвращает искомый элемент или null, если такой элемент не был найден.
     public WebElement traverseSearchResults(WebElement parentElement, String parentElementXPath, String additionalXPath,
                                             String elementName, WebElement nextButton, String elementNameAdditionalXPath) {
         boolean continueSearch = true;
-        waitForPresenceOfElement(By.xpath(parentElementXPath));
 
         while (continueSearch) {
+            waitForPresenceOfElement(By.xpath(parentElementXPath));
             js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
             PageFactory.initElements(driver, this);
             List<WebElement> elements = parentElement.findElements(By.xpath(additionalXPath));
 
             for (int i = 0; i < elements.size(); i++) {
-                WebElement currentElement = elements.get(i);
-                String currentElementName = currentElement.findElement((By.xpath(elementNameAdditionalXPath))).getText();
+                WebElement currentElement;
+                String currentElementName;
+                try {
+                    currentElement = elements.get(i);
+                    currentElementName = getTextFromSubelement(currentElement, elementNameAdditionalXPath);
+                } catch (NoSuchElementException ex) {
+                    PageFactory.initElements(driver, this);
+                    currentElement = elements.get(i);
+                    currentElementName = getTextFromSubelement(currentElement, elementNameAdditionalXPath);
+                }
                 if (currentElementName.equals(elementName))
                     return currentElement;
             }
@@ -215,11 +234,26 @@ public abstract class Page {
 
     // Этот метод проверяет, присутствует ли элемент на странице
     public void waitForPresenceOfElement(By by) {
+        waitUntilPageIsLoaded();
         wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    // Этот метод проверяет каждую секунду в течение 50 секунд, загрузилась ли страница
+    public void waitUntilPageIsLoaded() {
+        for (int i = 0; i < 50; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+            }
+
+            if (js.executeScript("return document.readyState").toString().equals("complete"));
+            break;
+        }
     }
 
     // Этот метод скроллит страницу для того, чтобы элемент был видимым в окне просмотра. Выравнивание по нижнему краю видимой зоны.
     public void scrollIntoView(WebElement element) {
+        waitUntilPageIsLoaded();
         js.executeScript("arguments[0].scrollIntoView(false);", element);
     }
 }
